@@ -18,10 +18,23 @@
       font-family: Arial, sans-serif;
     }
 
+    /* === Background for Bubbles === */
+    #background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background: #f0f0f0; /* Light background color */
+      overflow: hidden;
+    }
+
     /* === Main Content === */
     .content {
       position: relative;
       z-index: 2;
+      width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -31,20 +44,30 @@
       padding: 20px;
     }
 
-    /* Centered heading text */
+    /* --- Dynamic Image (GIF) Styling --- */
+    #dynamicImage {
+      position: absolute; /* Remove it from the flow */
+      top: 10px;        /* Adjust as needed */
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 300px;
+      transition: opacity 1s ease-in-out;
+      /* By default, the first gif "Hover Yes.gif" will be playing */
+    }
+
+    /* --- Centered heading text --- */
     .content h1 {
       font-size: 2rem;
+      margin-top: 150px;  /* Add some top margin so it doesn't overlap the gif */
       margin-bottom: 20px;
     }
 
-    /* === Buttons === */
+    /* --- Buttons --- */
     .button-container {
       display: flex;
-      gap: 30px; /* Added space between buttons */
-      flex-direction: row; /* Ensure they stay in a row by default */
+      gap: 30px; /* Space between buttons */
+      flex-direction: row; /* Row by default */
     }
-
-    /* Default button styles */
     .button-container button {
       padding: 10px 20px;
       font-size: 1rem;
@@ -52,64 +75,49 @@
       border: none;
       border-radius: 5px;
       transition: background-color 0.3s;
-      color: white; /* Make button text white */
+      color: white; /* White text */
+      font-weight: bold;
     }
-
-    /* Large button green */
+    /* Large button: green & 200% larger */
     .button-container button.large {
       background-color: green;
-      transform: scale(2); /* 200% larger */
+      transform: scale(2);
     }
-
-    /* Small button red, 50% smaller */
+    /* Small button: red & 50% smaller */
     .button-container button.small {
       background-color: red;
-      transform: scale(0.5); /* 50% smaller */
+      transform: scale(0.5);
     }
-
-    /* Button hover effects */
     .button-container button:hover {
       opacity: 0.8;
     }
-
-    /* === Mobile responsiveness === */
     @media (max-width: 768px) {
       .button-container {
-        flex-direction: column; /* Stack buttons on top of each other */
+        flex-direction: column; /* Stack buttons on small screens */
       }
     }
 
-    /* === Dynamic GIF === */
-    .content img {
-      max-width: 300px;
-      margin-bottom: 20px;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-    }
-
-    /* === Floating Bubbles === */
+    /* --- Floating Bubble (Circle) Styling --- */
     .circle {
       position: absolute;
-      width: 80px;
-      height: 80px;
       border-radius: 50%;
       background: rgba(255, 0, 0, 0.5); /* semi-transparent red */
     }
-
   </style>
 </head>
 <body>
-  <!-- Bouncing circles in the background -->
+  <!-- Bubbles will be added inside this background container -->
   <div id="background"></div>
 
   <!-- Main content container -->
   <div class="content">
+    <!-- Dynamic GIF: positioned absolutely so it doesn't push content down -->
+    <img id="dynamicImage" src="Hover Yes.gif" alt="Dynamic Animation" />
+
+    <!-- Centered heading text -->
     <h1>Alice will you be my Valentines?</h1>
 
-    <!-- Dynamic image (default GIF) -->
-    <img id="dynamicImage" src="default.gif" alt="Dynamic Animation" />
-
-    <!-- Two buttons: one larger than the other -->
+    <!-- Buttons -->
     <div class="button-container">
       <button id="btnLarge" class="large">Yes</button>
       <button id="btnSmall" class="small">No</button>
@@ -117,138 +125,158 @@
   </div>
 
   <script>
-    // === JavaScript to Change the Dynamic Image on Hover and Button Click ===
+    /**********************
+     * Dynamic GIF Logic
+     **********************/
     const dynamicImage = document.getElementById('dynamicImage');
     const btnLarge = document.getElementById('btnLarge');
     const btnSmall = document.getElementById('btnSmall');
 
-    // Replace these with your actual image paths
-    const defaultSrc = "default.gif";
-    const gifLarge = "large-button-gif.gif";  // Image to show when clicking on the large button
-    const gifSmall = "small-button-gif.gif";  // Image to show when clicking on the small button
+    // Update these with your actual GIF paths
+    const gifYes = "Yes_Click.gif";  // Gif to fade in on Yes click
+    const gifNo  = "No_Click.gif";   // Gif to fade in on No click
+    const defaultGif = "Hover Yes.gif"; // Default playing gif
 
-    // Function to change the GIF
-    function changeImage(gif) {
+    function changeImage(newGif) {
+      // Fade out the image
       dynamicImage.style.opacity = 0;
       setTimeout(() => {
-        dynamicImage.src = gif;
-        dynamicImage.style.opacity = 1;  // Fade in after change
+        dynamicImage.src = newGif;
+        dynamicImage.style.opacity = 1;
       }, 1000);
     }
 
-    // Event listeners for button hover (optional)
-    btnLarge.addEventListener('mouseenter', () => {
-      dynamicImage.src = "Hover Yes.gif";  // Update to hover gif for large button
-    });
-    btnLarge.addEventListener('mouseleave', () => {
-      dynamicImage.src = defaultSrc;  // Restore original gif
-    });
-
-    btnSmall.addEventListener('mouseenter', () => {
-      dynamicImage.src = "Hover No.gif";  // Update to hover gif for small button
-    });
-    btnSmall.addEventListener('mouseleave', () => {
-      dynamicImage.src = defaultSrc;  // Restore original gif
-    });
-
-    // Event listeners for button click
     btnLarge.addEventListener('click', () => {
-      changeImage(gifLarge);  // Show the larger button's gif
+      changeImage(gifYes);
     });
 
     btnSmall.addEventListener('click', () => {
-      changeImage(gifSmall);  // Show the small button's gif
+      changeImage(gifNo);
     });
 
-    // === Bubbles with Dynamic Physics ===
+    /**********************
+     * Bubble Physics Logic
+     **********************/
     const background = document.getElementById('background');
-    const circles = [];
+    let bubbles = [];
+    const numBubbles = 5;         // Adjust number of bubbles as desired
+    const bounceFactor = 0.9;     // Energy loss on collisions
+    const wallFriction = 1;       // No friction on walls (for a near-elastic bounce)
+    const gravity = 0;            // Set to 0 so they bounce based solely on their approach angle
 
-    // Create a new bubble
+    // Create a bubble object with random parameters
     function createBubble() {
-      const bubble = document.createElement('div');
-      bubble.classList.add('circle');
-      
-      // Set random initial positions
-      const size = Math.random() * 60 + 40; // Between 40px and 100px
+      const bubbleEl = document.createElement('div');
+      bubbleEl.classList.add('circle');
+
+      // Random size between 40px and 100px
+      const size = Math.random() * 60 + 40;
+      // Random starting position (ensuring the bubble is fully in view)
       const x = Math.random() * (window.innerWidth - size);
       const y = Math.random() * (window.innerHeight - size);
 
-      bubble.style.width = `${size}px`;
-      bubble.style.height = `${size}px`;
-      bubble.style.left = `${x}px`;
-      bubble.style.top = `${y}px`;
+      bubbleEl.style.width = `${size}px`;
+      bubbleEl.style.height = `${size}px`;
+      bubbleEl.style.left = `${x}px`;
+      bubbleEl.style.top = `${y}px`;
 
-      // Random initial velocity (speed and direction)
-      let vx = (Math.random() - 0.5) * 2;  // Horizontal velocity (-2 to 2)
-      let vy = (Math.random() - 0.5) * 2;  // Vertical velocity (-2 to 2)
+      // Random initial velocity (both X and Y components)
+      const vx = (Math.random() - 0.5) * 4;  // Range: -2 to 2 (or adjust as needed)
+      const vy = (Math.random() - 0.5) * 4;
 
-      // Bubble physics: gravity, friction, bounce factor
-      let gravity = 0.05;
-      let friction = 0.99;
-      let bounceFactor = 0.8;
+      const bubble = { 
+        element: bubbleEl,
+        x: x,
+        y: y,
+        vx: vx,
+        vy: vy,
+        size: size
+      };
 
-      function animateBubble() {
-        const rect = bubble.getBoundingClientRect();
-        let posX = rect.left + vx;
-        let posY = rect.top + vy;
-
-        // Apply gravity
-        vy += gravity;
-
-        // Bounce off the edges
-        if (posX <= 0 || posX + size >= window.innerWidth) {
-          vx = -vx * bounceFactor;  // Reverse direction with bounce
-        }
-
-        if (posY <= 0 || posY + size >= window.innerHeight) {
-          vy = -vy * bounceFactor;  // Reverse direction with bounce
-        }
-
-        // Apply friction
-        vx *= friction;
-        vy *= friction;
-
-        // Update position
-        bubble.style.left = `${posX}px`;
-        bubble.style.top = `${posY}px`;
-
-        // Detect collisions with other bubbles
-        circles.forEach(otherBubble => {
-          if (otherBubble !== bubble) {
-            const dx = posX - otherBubble.x;
-            const dy = posY - otherBubble.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            const minDistance = size / 2 + otherBubble.size / 2;
-
-            if (distance < minDistance) {
-              // Reverse velocities when a collision is detected
-              vx = -vx;
-              vy = -vy;
-            }
-          }
-        });
-
-        bubble.x = posX;
-        bubble.y = posY;
-        bubble.size = size;
-
-        requestAnimationFrame(animateBubble);  // Continue animation
-      }
-
-      // Initialize the bubble's position and add it to the screen
-      circles.push(bubble);
-      background.appendChild(bubble);
-
-      animateBubble();  // Start the bubble's animation
+      bubbles.push(bubble);
+      background.appendChild(bubbleEl);
     }
 
-    // Create multiple bubbles
-    for (let i = 0; i < 5; i++) {
+    // Create all bubbles
+    for (let i = 0; i < numBubbles; i++) {
       createBubble();
     }
 
-  </script>
+    // Global update loop for bubbles
+    function updateBubbles() {
+      // Update positions and check wall collisions
+      for (let bubble of bubbles) {
+        // Update position based on current velocity
+        bubble.x += bubble.vx;
+        bubble.y += bubble.vy;
 
+        // Bounce off left/right walls
+        if (bubble.x < 0) {
+          bubble.x = 0;
+          bubble.vx = Math.abs(bubble.vx) * bounceFactor;
+        } else if (bubble.x + bubble.size > window.innerWidth) {
+          bubble.x = window.innerWidth - bubble.size;
+          bubble.vx = -Math.abs(bubble.vx) * bounceFactor;
+        }
+
+        // Bounce off top/bottom walls
+        if (bubble.y < 0) {
+          bubble.y = 0;
+          bubble.vy = Math.abs(bubble.vy) * bounceFactor;
+        } else if (bubble.y + bubble.size > window.innerHeight) {
+          bubble.y = window.innerHeight - bubble.size;
+          bubble.vy = -Math.abs(bubble.vy) * bounceFactor;
+        }
+      }
+
+      // Check collisions between bubbles (pairwise)
+      for (let i = 0; i < bubbles.length; i++) {
+        for (let j = i + 1; j < bubbles.length; j++) {
+          let b1 = bubbles[i];
+          let b2 = bubbles[j];
+          let dx = (b1.x + b1.size / 2) - (b2.x + b2.size / 2);
+          let dy = (b1.y + b1.size / 2) - (b2.y + b2.size / 2);
+          let distance = Math.sqrt(dx * dx + dy * dy);
+          let minDist = (b1.size + b2.size) / 2;
+          if (distance < minDist) {
+            // Normalize collision vector
+            let nx = dx / distance;
+            let ny = dy / distance;
+            // Relative velocity along the normal
+            let dvx = b1.vx - b2.vx;
+            let dvy = b1.vy - b2.vy;
+            let relVel = dvx * nx + dvy * ny;
+            // Only resolve if bubbles are moving toward each other
+            if (relVel < 0) {
+              let impulse = -(1 + bounceFactor) * relVel / 2; // Equal mass assumption
+              let impulseX = impulse * nx;
+              let impulseY = impulse * ny;
+              b1.vx += impulseX;
+              b1.vy += impulseY;
+              b2.vx -= impulseX;
+              b2.vy -= impulseY;
+            }
+            // Separate overlapping bubbles
+            let overlap = minDist - distance;
+            b1.x += (overlap / 2) * nx;
+            b1.y += (overlap / 2) * ny;
+            b2.x -= (overlap / 2) * nx;
+            b2.y -= (overlap / 2) * ny;
+          }
+        }
+      }
+
+      // Update DOM positions
+      for (let bubble of bubbles) {
+        bubble.element.style.left = `${bubble.x}px`;
+        bubble.element.style.top = `${bubble.y}px`;
+      }
+
+      requestAnimationFrame(updateBubbles);
+    }
+
+    // Start the update loop
+    updateBubbles();
+  </script>
 </body>
 </html>
