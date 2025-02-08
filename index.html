@@ -17,7 +17,7 @@
       overflow: hidden;
       font-family: Arial, sans-serif;
     }
-    
+
     /* === Background with Bouncing Circles === */
     #background {
       position: fixed;
@@ -29,18 +29,18 @@
       background: #f0f0f0; /* Light background color */
       overflow: hidden;
     }
-    
-    /* Style for the circles */
+
+    /* Style for the circles (bubbles) */
     .circle {
       position: absolute;
-      width: 50px;
-      height: 50px;
+      width: 80px;  /* Increased size */
+      height: 80px; /* Increased size */
       border-radius: 50%;
       background: rgba(255, 0, 0, 0.5);  /* semi-transparent red */
       animation: bounce 5s infinite ease-in-out;
     }
-    
-    /* Create variation with position, duration, and delays */
+
+    /* Add more random positions for different circles */
     #background .circle:nth-child(1) {
       left: 10%;
       top: 20%;
@@ -66,25 +66,25 @@
       top: 40%;
       animation-duration: 9s;
     }
-    
+
     @keyframes bounce {
       0% {
         transform: translate(0, 0);
       }
       25% {
-        transform: translate(20px, -30px);
+        transform: translate(30px, -50px);
       }
       50% {
-        transform: translate(0, -60px);
+        transform: translate(0, -100px);
       }
       75% {
-        transform: translate(-20px, -30px);
+        transform: translate(-30px, -50px);
       }
       100% {
         transform: translate(0, 0);
       }
     }
-    
+
     /* === Main Content === */
     .content {
       position: relative;
@@ -97,44 +97,60 @@
       text-align: center;
       padding: 20px;
     }
-    
+
     /* Dynamic image styling */
     .content img {
       max-width: 300px;
       margin-bottom: 20px;
     }
-    
+
     /* Centered heading text */
     .content h1 {
       font-size: 2rem;
       margin-bottom: 20px;
     }
-    
+
     /* === Buttons === */
     .button-container {
       display: flex;
-      gap: 20px;
+      gap: 30px; /* Added space between buttons */
+      flex-direction: row; /* Ensure they stay in a row by default */
     }
-    
+
+    /* Default button styles */
     .button-container button {
       padding: 10px 20px;
       font-size: 1rem;
       cursor: pointer;
       border: none;
       border-radius: 5px;
-      background-color: #ff69b4;
-      color: white;
       transition: background-color 0.3s;
     }
-    
-    .button-container button:hover {
-      background-color: #ff1493;
-    }
-    
-    /* One button will be 200% bigger than the other */
+
+    /* Large button green */
     .button-container button.large {
-      transform: scale(2);
+      background-color: green;
+      transform: scale(2); /* 200% larger */
     }
+
+    /* Small button red, 50% smaller */
+    .button-container button.small {
+      background-color: red;
+      transform: scale(0.5); /* 50% smaller */
+    }
+
+    /* Button hover effects */
+    .button-container button:hover {
+      opacity: 0.8;
+    }
+
+    /* === Mobile responsiveness === */
+    @media (max-width: 768px) {
+      .button-container {
+        flex-direction: column; /* Stack buttons on top of each other */
+      }
+    }
+
   </style>
 </head>
 <body>
