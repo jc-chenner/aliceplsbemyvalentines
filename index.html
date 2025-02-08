@@ -46,13 +46,34 @@
 
     /* --- Dynamic Image (GIF) Styling --- */
     #dynamicImage {
-      position: absolute; /* Remove it from the flow */
-      top: 10px;        /* Adjust as needed */
+      position: absolute;
+      top: 10px;
       left: 50%;
       transform: translateX(-50%);
       max-width: 300px;
       transition: opacity 1s ease-in-out;
-      /* By default, the first gif "Hover Yes.gif" will be playing */
+      opacity: 0;  /* Initially hidden */
+      z-index: 100; /* Put on top of other elements */
+      background-color: rgba(255, 255, 255, 0.8); /* Light background behind the popup */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      display: none; /* Hidden by default */
+    }
+
+    /* Close button for the popup */
+    #closePopup {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #fff;
+      background: red;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 50%;
+      font-weight: bold;
     }
 
     /* --- Centered heading text --- */
@@ -97,12 +118,34 @@
       }
     }
 
-    /* --- Floating Bubble (Circle) Styling --- */
+    /* === Heart-Shaped Bubbles (Circles) === */
     .circle {
       position: absolute;
-      border-radius: 50%;
-      background: rgba(255, 0, 0, 0.5); /* semi-transparent red */
+      width: 80px;
+      height: 80px;
+      background: red; /* Heart color */
+      transform: rotate(45deg); /* Rotate the square to form a diamond */
+      border-radius: 50% 50% 0 0; /* Top rounded corners */
     }
+
+    .circle::before, .circle::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 80px;
+      height: 80px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .circle::before {
+      left: 50px;  /* Right part of the heart */
+    }
+
+    .circle::after {
+      left: -50px; /* Left part of the heart */
+    }
+
   </style>
 </head>
 <body>
@@ -111,11 +154,13 @@
 
   <!-- Main content container -->
   <div class="content">
-    <!-- Dynamic GIF: positioned absolutely so it doesn't push content down -->
-    <img id="dynamicImage" src="Hover Yes.gif" alt="Dynamic Animation" />
-
-    <!-- Centered heading text -->
     <h1>Alice will you be my Valentines?</h1>
+
+    <!-- Dynamic Image (Popup) -->
+    <div id="dynamicImageContainer">
+      <img id="dynamicImage" src="Hover Yes.gif" alt="Dynamic Animation" />
+      <button id="closePopup">X</button>
+    </div>
 
     <!-- Buttons -->
     <div class="button-container">
@@ -131,6 +176,8 @@
     const dynamicImage = document.getElementById('dynamicImage');
     const btnLarge = document.getElementById('btnLarge');
     const btnSmall = document.getElementById('btnSmall');
+    const dynamicImageContainer = document.getElementById('dynamicImageContainer');
+    const closePopup = document.getElementById('closePopup');
 
     // Update these with your actual GIF paths
     const gifYes = "Yes_Click.gif";  // Gif to fade in on Yes click
@@ -138,7 +185,6 @@
     const defaultGif = "Hover Yes.gif"; // Default playing gif
 
     function changeImage(newGif) {
-      // Fade out the image
       dynamicImage.style.opacity = 0;
       setTimeout(() => {
         dynamicImage.src = newGif;
@@ -148,10 +194,17 @@
 
     btnLarge.addEventListener('click', () => {
       changeImage(gifYes);
+      dynamicImageContainer.style.display = 'block'; // Show the popup
     });
 
     btnSmall.addEventListener('click', () => {
       changeImage(gifNo);
+      dynamicImageContainer.style.display = 'block'; // Show the popup
+    });
+
+    // Close the popup when the "X" is clicked
+    closePopup.addEventListener('click', () => {
+      dynamicImageContainer.style.display = 'none'; // Hide the popup
     });
 
     /**********************
@@ -168,9 +221,9 @@
     function createBubble() {
       const bubbleEl = document.createElement('div');
       bubbleEl.classList.add('circle');
-
-      // Random size between 40px and 100px
-      const size = Math.random() * 60 + 40;
+      
+      // Set random initial positions
+      const size = Math.random() * 60 + 40; // Between 40px and 100px
       // Random starting position (ensuring the bubble is fully in view)
       const x = Math.random() * (window.innerWidth - size);
       const y = Math.random() * (window.innerHeight - size);
@@ -278,5 +331,6 @@
     // Start the update loop
     updateBubbles();
   </script>
+
 </body>
 </html>
