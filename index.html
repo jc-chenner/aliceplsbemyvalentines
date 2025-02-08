@@ -102,6 +102,8 @@
     .content img {
       max-width: 300px;
       margin-bottom: 20px;
+      opacity: 0;  /* Start with invisible image */
+      transition: opacity 1s ease-in-out;
     }
 
     /* Centered heading text */
@@ -125,6 +127,7 @@
       border: none;
       border-radius: 5px;
       transition: background-color 0.3s;
+      color: white; /* Make button text white */
     }
 
     /* Large button green */
@@ -179,30 +182,50 @@
   </div>
 
   <script>
-    // === JavaScript to Change the Dynamic Image on Hover ===
+    // === JavaScript to Change the Dynamic Image on Hover and Button Click ===
     const dynamicImage = document.getElementById('dynamicImage');
     const btnLarge = document.getElementById('btnLarge');
     const btnSmall = document.getElementById('btnSmall');
 
     // Replace these with your actual image paths
     const defaultSrc = "default.gif";
-    const hoverSrcLarge = "hover1.gif";  // Image to show when hovering on the large button
-    const hoverSrcSmall = "hover2.gif";  // Image to show when hovering on the small button
+    const gifLarge = "large-button-gif.gif";  // Image to show when clicking on the large button
+    const gifSmall = "small-button-gif.gif";  // Image to show when clicking on the small button
 
-    // Change image when hovering over the large button
+    // Function to change the GIF
+    function changeImage(gif) {
+      // Fade out the current image
+      dynamicImage.style.opacity = 0;
+
+      // Change the source and fade it in
+      setTimeout(() => {
+        dynamicImage.src = gif;
+        dynamicImage.style.opacity = 1;  // Fade in after change
+      }, 1000);  // Delay to ensure the fade-out effect completes
+    }
+
+    // Event listeners for button hover (optional)
     btnLarge.addEventListener('mouseenter', () => {
-      dynamicImage.src = hoverSrcLarge;
+      dynamicImage.src = "hover1.gif";  // Update to hover gif for large button
     });
     btnLarge.addEventListener('mouseleave', () => {
-      dynamicImage.src = defaultSrc;
+      dynamicImage.src = defaultSrc;  // Restore original gif
     });
 
-    // Change image when hovering over the small button
     btnSmall.addEventListener('mouseenter', () => {
-      dynamicImage.src = hoverSrcSmall;
+      dynamicImage.src = "hover2.gif";  // Update to hover gif for small button
     });
     btnSmall.addEventListener('mouseleave', () => {
-      dynamicImage.src = defaultSrc;
+      dynamicImage.src = defaultSrc;  // Restore original gif
+    });
+
+    // Event listeners for button click
+    btnLarge.addEventListener('click', () => {
+      changeImage(gifLarge);  // Show the larger button's gif
+    });
+
+    btnSmall.addEventListener('click', () => {
+      changeImage(gifSmall);  // Show the small button's gif
     });
   </script>
 </body>
