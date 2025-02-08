@@ -118,32 +118,15 @@
       }
     }
 
-    /* === Heart-Shaped Bubbles (Circles) === */
+    /* === Floating Heart Bubbles (using image) === */
     .circle {
       position: absolute;
       width: 80px;
       height: 80px;
-      background: red; /* Heart color */
-      transform: rotate(45deg); /* Rotate the square to form a diamond */
-      border-radius: 50% 50% 0 0; /* Top rounded corners */
-    }
-
-    .circle::before, .circle::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      width: 80px;
-      height: 80px;
-      background: red;
-      border-radius: 50%;
-    }
-
-    .circle::before {
-      left: 50px;  /* Right part of the heart */
-    }
-
-    .circle::after {
-      left: -50px; /* Left part of the heart */
+      background: url('heart.png'); /* Path to the heart image */
+      background-size: cover;  /* Ensure the heart image covers the bubble */
+      background-position: center;
+      border-radius: 50%; /* Rounded shape to make it fit properly */
     }
 
   </style>
