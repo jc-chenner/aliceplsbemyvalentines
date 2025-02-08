@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valentine's Surprise</title>
+  <style>
+    /* === Reset & Basic Setup === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+    
+    /* === Background with Bouncing Circles === */
+    #background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      background: #f0f0f0; /* Light background color */
+      overflow: hidden;
+    }
+    
+    /* Style for the circles */
+    .circle {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 0, 0, 0.5);  /* semi-transparent red */
+      animation: bounce 5s infinite ease-in-out;
+    }
+    
+    /* Create variation with position, duration, and delays */
+    #background .circle:nth-child(1) {
+      left: 10%;
+      top: 20%;
+      animation-duration: 6s;
+    }
+    #background .circle:nth-child(2) {
+      left: 40%;
+      top: 70%;
+      animation-duration: 8s;
+    }
+    #background .circle:nth-child(3) {
+      left: 70%;
+      top: 10%;
+      animation-duration: 5s;
+    }
+    #background .circle:nth-child(4) {
+      left: 80%;
+      top: 60%;
+      animation-duration: 7s;
+    }
+    #background .circle:nth-child(5) {
+      left: 30%;
+      top: 40%;
+      animation-duration: 9s;
+    }
+    
+    @keyframes bounce {
+      0% {
+        transform: translate(0, 0);
+      }
+      25% {
+        transform: translate(20px, -30px);
+      }
+      50% {
+        transform: translate(0, -60px);
+      }
+      75% {
+        transform: translate(-20px, -30px);
+      }
+      100% {
+        transform: translate(0, 0);
+      }
+    }
+    
+    /* === Main Content === */
+    .content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    /* Dynamic image styling */
+    .content img {
+      max-width: 300px;
+      margin-bottom: 20px;
+    }
+    
+    /* Centered heading text */
+    .content h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    
+    /* === Buttons === */
+    .button-container {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .button-container button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #ff69b4;
+      color: white;
+      transition: background-color 0.3s;
+    }
+    
+    .button-container button:hover {
+      background-color: #ff1493;
+    }
+    
+    /* One button will be 200% bigger than the other */
+    .button-container button.large {
+      transform: scale(2);
+    }
+  </style>
+</head>
+<body>
+  <!-- Bouncing circles in the background -->
+  <div id="background">
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+  </div>
+
+  <!-- Main content container -->
+  <div class="content">
+    <!-- Dynamic image (default GIF) -->
+    <img id="dynamicImage" src="default.gif" alt="Dynamic Animation" />
+
+    <!-- Centered text -->
+    <h1>Alice will you be my Valentines?</h1>
+
+    <!-- Two buttons: one larger than the other -->
+    <div class="button-container">
+      <button id="btnLarge" class="large">Large Button</button>
+      <button id="btnSmall" class="small">Small Button</button>
+    </div>
+  </div>
+
+  <script>
+    // === JavaScript to Change the Dynamic Image on Hover ===
+    const dynamicImage = document.getElementById('dynamicImage');
+    const btnLarge = document.getElementById('btnLarge');
+    const btnSmall = document.getElementById('btnSmall');
+
+    // Replace these with your actual image paths
+    const defaultSrc = "default.gif";
+    const hoverSrcLarge = "hover1.gif";  // Image to show when hovering on the large button
+    const hoverSrcSmall = "hover2.gif";  // Image to show when hovering on the small button
+
+    // Change image when hovering over the large button
+    btnLarge.addEventListener('mouseenter', () => {
+      dynamicImage.src = hoverSrcLarge;
+    });
+    btnLarge.addEventListener('mouseleave', () => {
+      dynamicImage.src = defaultSrc;
+    });
+
+    // Change image when hovering over the small button
+    btnSmall.addEventListener('mouseenter', () => {
+      dynamicImage.src = hoverSrcSmall;
+    });
+    btnSmall.addEventListener('mouseleave', () => {
+      dynamicImage.src = defaultSrc;
+    });
+  </script>
+</body>
+</html>
