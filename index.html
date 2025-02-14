@@ -136,6 +136,22 @@
       pointer-events: none; /* Make it non-interactive */
     }
 
+    /* === Close button for YouTube player === */
+    #closeYoutubePopup {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #fff;
+      background: red;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 50%;
+      font-weight: bold;
+      z-index: 102; /* Ensure close button is above the player */
+    }
+
     /* === Error Popup === */
     #errorPopup {
       position: fixed;
