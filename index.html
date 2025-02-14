@@ -116,6 +116,20 @@
       }
     }
 
+    /* === YouTube Audio Player Popup === */
+    #youtubePopup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      display: none; /* Hidden by default */
+      z-index: 101;
+    }
+
     /* === Error Popup === */
     #errorPopup {
       position: fixed;
@@ -179,6 +193,12 @@
     </div>
   </div>
 
+  <!-- YouTube Audio Player Popup -->
+  <div id="youtubePopup">
+    <iframe id="youtubeVideo" width="560" height="315" src="https://www.youtube.com/embed/8Go6dHuylyM?autoplay=1&controls=0&mute=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <button id="closeYoutubePopup">Close</button>
+  </div>
+
   <!-- Error Popup -->
   <div id="errorPopup">
     <div id="errorMessage">Sorry u can't do that</div>
@@ -209,13 +229,14 @@
 
     btnLarge.addEventListener('click', () => {
       changeImage(gifYes);
-      dynamicImageContainer.style.display = 'block'; // Show the popup
+      dynamicImageContainer.style.display = 'block'; // Show the popup for Yes
+      openYoutubePopup(); // Open the YouTube audio player popup for "Yes" click
     });
 
     btnSmall.addEventListener('click', () => {
       changeImage(gifNo); // Change GIF to the "No" one
       dynamicImageContainer.style.display = 'block'; // Show the GIF popup
-      showErrorPopup(); // Show the error popup
+      showErrorPopup(); // Show the error popup for No
     });
 
     // Close the popup when the "X" is clicked
@@ -235,6 +256,20 @@
 
     okButton.addEventListener('click', () => {
       errorPopup.style.display = 'none'; // Hide the error popup when OK is clicked
+    });
+
+    /**********************
+     * YouTube Audio Player Logic
+     **********************/
+    const youtubePopup = document.getElementById('youtubePopup');
+    const closeYoutubePopup = document.getElementById('closeYoutubePopup');
+    
+    function openYoutubePopup() {
+      youtubePopup.style.display = 'block'; // Show the YouTube audio player popup
+    }
+
+    closeYoutubePopup.addEventListener('click', () => {
+      youtubePopup.style.display = 'none'; // Close the YouTube audio player popup
     });
 
     /**********************
