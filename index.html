@@ -100,12 +100,12 @@
     /* Large button: green & 200% larger */
     .button-container button.large {
       background-color: green;
-      transform: scale(2);
+      transform: scale(3);
     }
     /* Small button: red & 50% smaller */
     .button-container button.small {
       background-color: red;
-      transform: scale(0.5);
+      transform: scale(0.25);
     }
     .button-container button:hover {
       opacity: 0.8;
@@ -137,7 +137,7 @@
     }
 
     #okButton {
-      padding: 10px 20px;
+      padding: 15px 30px;
       font-size: 1rem;
       cursor: pointer;
       background-color: #007bff;
@@ -149,8 +149,8 @@
     /* === Floating Heart Bubbles (using image) === */
     .circle {
       position: absolute;
-      width: 80px;
-      height: 80px;
+      width: 125px;
+      height: 125px;
       background: url('heart.png'); /* Replace with the path to your heart-shaped image */
       background-size: cover;
       background-position: center;
@@ -181,8 +181,8 @@
 
   <!-- Error Popup -->
   <div id="errorPopup">
-    <div id="errorMessage">Oops! Something went wrong!</div>
-    <button id="okButton">OK</button>
+    <div id="errorMessage">Sorry u can't do that</div>
+    <button id="okButton">sorry William I was wrong</button>
   </div>
 
   <script>
@@ -196,8 +196,8 @@
     const closePopup = document.getElementById('closePopup');
 
     // Update these with your actual GIF paths
-    const gifYes = "Yes_Click.gif";  // Gif to show on Yes click
-    const gifNo  = "No_Click.gif";   // Gif to show on No click
+    const gifYes = "Hover Yes.gif";  // Gif to show on Yes click
+    const gifNo  = "Hover No.gif";   // Gif to show on No click
     const defaultGif = "Hover Yes.gif"; // Default playing gif
 
     function changeImage(newGif) {
