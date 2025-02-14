@@ -52,7 +52,7 @@
       transform: translateX(-50%);
       max-width: 300px;
       transition: opacity 1s ease-in-out;
-      opacity: 1;  /* Visible by default */
+      opacity: 0;  /* No GIF by default */
       background-color: rgba(255, 255, 255, 0.8); /* Light background behind the popup */
       padding: 20px;
       border-radius: 10px;
@@ -62,8 +62,8 @@
     /* Close button for the popup */
     #closePopup {
       position: absolute;
-      top: 5px;
-      right: 5px;
+      top: 0;
+      right: 0;
       font-size: 20px;
       cursor: pointer;
       color: #fff;
@@ -77,8 +77,8 @@
     /* --- Centered heading text --- */
     .content h1 {
       font-size: 2rem;
-      margin-top: 150px;  /* Ensure it doesn’t overlap the popup */
-      margin-bottom: 20px;
+      margin-top: 120px;  /* More margin between text and buttons */
+      margin-bottom: 40px;
     }
 
     /* --- Buttons --- */
@@ -149,8 +149,8 @@
     /* === Floating Heart Bubbles (using image) === */
     .circle {
       position: absolute;
-      width: 125px;
-      height: 125px;
+      width: 150px;  /* Increased size */
+      height: 150px; /* Increased size */
       background: url('heart.png'); /* Replace with the path to your heart-shaped image */
       background-size: cover;
       background-position: center;
@@ -168,7 +168,7 @@
 
     <!-- Dynamic Image (Popup) -->
     <div id="dynamicImageContainer">
-      <img id="dynamicImage" src="Hover Yes.gif" alt="Dynamic Animation" />
+      <img id="dynamicImage" src="" alt="Dynamic Animation" />
       <button id="closePopup">X</button>
     </div>
 
@@ -195,10 +195,9 @@
     const btnSmall = document.getElementById('btnSmall');
     const closePopup = document.getElementById('closePopup');
 
-    // Update these with your actual GIF paths
+    // No GIFs by default (leave the source empty)
     const gifYes = "Hover Yes.gif";  // Gif to show on Yes click
     const gifNo  = "Hover No.gif";   // Gif to show on No click
-    const defaultGif = "Hover Yes.gif"; // Default playing gif
 
     function changeImage(newGif) {
       dynamicImage.style.opacity = 0;
@@ -243,7 +242,7 @@
      **********************/
     const background = document.getElementById('background');
     let bubbles = [];
-    const numBubbles = 5;         // Adjust number of bubbles as desired
+    const numBubbles = 15;         // Adjust number of bubbles (now 15)
     const bounceFactor = 0.9;     // Energy loss on collisions
     const gravity = 0;            // Set to 0 for pure angle-based bounce
 
@@ -253,7 +252,7 @@
       bubbleEl.classList.add('circle');
       
       // Set random initial positions
-      const size = Math.random() * 60 + 40; // Between 40px and 100px
+      const size = Math.random() * 60 + 50; // Between 50px and 110px
       const x = Math.random() * (window.innerWidth - size);
       const y = Math.random() * (window.innerHeight - size);
 
@@ -324,4 +323,3 @@
 
 </body>
 </html>
-
