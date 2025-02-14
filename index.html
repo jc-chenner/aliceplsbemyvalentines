@@ -46,9 +46,13 @@
 
     /* --- Dynamic Image (GIF) Styling --- */
     #dynamicImage {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
       max-width: 300px;
       transition: opacity 1s ease-in-out;
-      opacity: 0;  /* Initially hidden */
+      opacity: 1;  /* Visible by default */
       background-color: rgba(255, 255, 255, 0.8); /* Light background behind the popup */
       padding: 20px;
       border-radius: 10px;
@@ -73,7 +77,7 @@
     /* --- Centered heading text --- */
     .content h1 {
       font-size: 2rem;
-      margin-top: 150px;  /* Ensure it doesn’t overlap the gif */
+      margin-top: 150px;  /* Ensure it doesn’t overlap the popup */
       margin-bottom: 20px;
     }
 
@@ -112,6 +116,36 @@
       }
     }
 
+    /* === Error Popup === */
+    #errorPopup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      display: none; /* Hidden by default */
+      z-index: 101;
+    }
+
+    #errorMessage {
+      font-size: 1.2rem;
+      color: red;
+      margin-bottom: 10px;
+    }
+
+    #okButton {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
     /* === Floating Heart Bubbles (using image) === */
     .circle {
       position: absolute;
@@ -122,27 +156,6 @@
       background-position: center;
       border-radius: 50%; /* This keeps the image from stretching */
     }
-
-    /* --- Popups for multiple images --- */
-    .image-popup {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1000;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Popup container for YouTube video */
-    .youtube-popup iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
   </style>
 </head>
 <body>
@@ -166,19 +179,25 @@
     </div>
   </div>
 
+  <!-- Error Popup -->
+  <div id="errorPopup">
+    <div id="errorMessage">Oops! Something went wrong!</div>
+    <button id="okButton">OK</button>
+  </div>
+
   <script>
     /**********************
      * Dynamic GIF Logic
      **********************/
     const dynamicImage = document.getElementById('dynamicImage');
+    const dynamicImageContainer = document.getElementById('dynamicImageContainer');
     const btnLarge = document.getElementById('btnLarge');
     const btnSmall = document.getElementById('btnSmall');
-    const dynamicImageContainer = document.getElementById('dynamicImageContainer');
     const closePopup = document.getElementById('closePopup');
 
     // Update these with your actual GIF paths
-    const gifYes = "Hover Yes.gif";  // Gif to show on Yes click
-    const gifNo  = "Hover No.gif";   // Gif to show on No click
+    const gifYes = "Yes_Click.gif";  // Gif to show on Yes click
+    const gifNo  = "No_Click.gif";   // Gif to show on No click
     const defaultGif = "Hover Yes.gif"; // Default playing gif
 
     function changeImage(newGif) {
@@ -192,54 +211,32 @@
     btnLarge.addEventListener('click', () => {
       changeImage(gifYes);
       dynamicImageContainer.style.display = 'block'; // Show the popup
-      openYouTubeVideo();  // If the "Yes" button is clicked, play YouTube video
     });
 
     btnSmall.addEventListener('click', () => {
-      changeImage(gifNo);
-      dynamicImageContainer.style.display = 'block'; // Show the popup
-      openImagePopups();  // If the "No" button is clicked, open multiple popups with images
+      changeImage(gifNo); // Change GIF to the "No" one
+      dynamicImageContainer.style.display = 'block'; // Show the GIF popup
+      showErrorPopup(); // Show the error popup
     });
 
     // Close the popup when the "X" is clicked
     closePopup.addEventListener('click', () => {
-      dynamicImageContainer.style.display = 'none';
+      dynamicImageContainer.style.display = 'none'; // Hide the dynamic image popup
     });
 
     /**********************
-     * Open Multiple Image Popups
+     * Error Popup Logic
      **********************/
-    function openImagePopups() {
-      for (let i = 0; i < 20; i++) {
-        const popup = document.createElement('div');
-        popup.classList.add('image-popup');
-        popup.innerHTML = `<img src="image${i+1}.jpg" alt="Popup Image ${i+1}" style="width: 200px; height: 200px;"/>`;
-        document.body.appendChild(popup);
+    const errorPopup = document.getElementById('errorPopup');
+    const okButton = document.getElementById('okButton');
 
-        // Close the popup after 5 seconds (or you can choose other logic)
-        setTimeout(() => {
-          popup.remove();
-        }, 5000);
-      }
+    function showErrorPopup() {
+      errorPopup.style.display = 'block'; // Show the error popup
     }
 
-    /**********************
-     * Play YouTube Video in Popup
-     **********************/
-    function openYouTubeVideo() {
-      const youtubePopup = document.createElement('div');
-      youtubePopup.classList.add('image-popup');
-      youtubePopup.classList.add('youtube-popup');
-      youtubePopup.innerHTML = `
-        <iframe src="https://www.youtube.com/watch?v=AtPrjYp75uA&ab_channel=MeowStories" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      `;
-      document.body.appendChild(youtubePopup);
-
-      // Close the video popup after 10 seconds (or you can choose other logic)
-      setTimeout(() => {
-        youtubePopup.remove();
-      }, 10000);
-    }
+    okButton.addEventListener('click', () => {
+      errorPopup.style.display = 'none'; // Hide the error popup when OK is clicked
+    });
 
     /**********************
      * Bubble Physics Logic
@@ -257,7 +254,6 @@
       
       // Set random initial positions
       const size = Math.random() * 60 + 40; // Between 40px and 100px
-      // Random starting position (ensuring the bubble is fully in view)
       const x = Math.random() * (window.innerWidth - size);
       const y = Math.random() * (window.innerHeight - size);
 
@@ -313,8 +309,8 @@
         }
       }
 
-      for (let i = 0; i < bubbles.length; i++) {
-        let bubble = bubbles[i];
+      // Update DOM positions
+      for (let bubble of bubbles) {
         bubble.element.style.left = `${bubble.x}px`;
         bubble.element.style.top = `${bubble.y}px`;
       }
@@ -328,3 +324,4 @@
 
 </body>
 </html>
+
